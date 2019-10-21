@@ -1,7 +1,6 @@
 # Adreno 630 GPU Driver
 
 Latest GPU driver for Adreno 630 (SD 845).
-!! ANDROID 10 ONLY !!
 
 ## Instructions ##
 * __Install Module__ via Magisk Manager/TWRP
