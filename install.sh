@@ -126,6 +126,17 @@ print_modname() {
   ui_print "     Adreno 630 GPU Driver     "
   ui_print "           v415.0              "
   ui_print "*******************************"
+  
+    if [ -f $VEN/build.prop ]; then BUILDS="/system/build.prop $VEN/build.prop"; else BUILDS="/system/build.prop"; fi
+    DEVICE=$(grep -E "ro.boot.hardware.platform=sdm845" "$BUILDS")
+  if [ -n "$DEVICE" ]; then
+    break
+  else
+    ui_print "This doesn't seem like a SD 845!"
+    ui_print "Exiting..."
+    abort
+  fi
+  
 }
 
 # Copy/extract your module files into $MODPATH in on_install.
