@@ -128,7 +128,7 @@ print_modname() {
   ui_print "*******************************"
   
     if [ -f $VEN/build.prop ]; then BUILDS="/system/build.prop $VEN/build.prop"; else BUILDS="/system/build.prop"; fi
-    DEVICE=$(grep -E "ro.boot.hardware.platform=sdm845" "$BUILDS")
+    DEVICE=$(grep -E "ro.board.platform=sdm845" "$BUILDS")
   if [ -n "$DEVICE" ]; then
     break
   else
