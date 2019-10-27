@@ -126,22 +126,16 @@ print_modname() {
   ui_print "     Adreno 630 GPU Driver     "
   ui_print "           v415.0              "
   ui_print "*******************************"
-  
-    if [ -f $VEN/build.prop ]; then BUILDS="/system/build.prop $VEN/build.prop"; else BUILDS="/system/build.prop"; fi
-    DEVICE=$(grep -E "ro.board.platform=sdm845" "$BUILDS")
-  if [ -n "$DEVICE" ]; then
-    break
-  else
-    ui_print "This doesn't seem like a SD 845!"
-    ui_print "Exiting..."
-    abort
-  fi
-  
 }
 
 # Copy/extract your module files into $MODPATH in on_install.
 
 on_install() {
+  ui_print " "
+  ui_print "- Checking device compatibility"
+  [ "`getprop | grep -iE 'SDM845|sdm845'`" ] || abort "[FAIL!] Device is not SDM845."
+  ui_print "- SDM845 detected"
+
   # The following is the default implementation: extract $ZIPFILE/system to $MODPATH
   # Extend/change the logic to whatever you want
   ui_print "- Extracting module files"
