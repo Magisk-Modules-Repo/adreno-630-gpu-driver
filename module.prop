@@ -1,6 +1,6 @@
 id=adreno-630-gpu-driver
 name=Adreno 630 GPU Driver
-version=v415.0 (12 Sep 2019)
-versionCode=4150
+version=v415.0
+versionCode=4151
 author=P1N2O
 description=Latest GPU driver for Adreno 630 (SD 845).
