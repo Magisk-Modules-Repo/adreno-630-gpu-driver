@@ -131,10 +131,13 @@ print_modname() {
 # Copy/extract your module files into $MODPATH in on_install.
 
 on_install() {
-  ui_print " "
-  ui_print "- Checking device compatibility"
+
+  ui_print "\n- Checking device compatibility"
   [ "`getprop | grep -iE 'SDM845|sdm845'`" ] || abort "[FAIL!] Device is not SDM845."
   ui_print "- SDM845 detected"
+  
+  custom_variables()
+  device_check()  
 
   # The following is the default implementation: extract $ZIPFILE/system to $MODPATH
   # Extend/change the logic to whatever you want
@@ -158,3 +161,16 @@ set_permissions() {
 }
 
 # You can add more functions to assist your custom script code
+custom_variables() {
+if [ -f vendor/build.prop ]; then BUILDS="/system/build.prop vendor/build.prop"; else BUILDS="/system/build.prop"; fi
+  DEVICECHECK=$(grep -E "ro.build.version.release=10" $BUILDS)
+  VERSIONCHECK=$(grep -E "ro.build.version.release=10|ro.build.version.sdk=29" $BUILDS)
+}
+
+device_check() {
+  if [ -n "$VERSIONCHECK" ]; then
+    return 0
+  else
+    abort "[FAIL!] Not an Android 10 device!"
+  fi
+}
