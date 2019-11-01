@@ -132,7 +132,7 @@ print_modname() {
 
 on_install() {
 
-  ui_print "\n- Checking device compatibility"
+  ui_print "- Checking device compatibility"
   [ "`getprop | grep -iE 'SDM845|sdm845'`" ] || abort "[FAIL!] Device is not SDM845."
   ui_print "- SDM845 detected"
   
