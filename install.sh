@@ -131,18 +131,26 @@ print_modname() {
 # Copy/extract your module files into $MODPATH in on_install.
 
 on_install() {
-
-  ui_print "- Checking device compatibility"
-  [ "`getprop | grep -iE 'SDM845|sdm845'`" ] || abort "[FAIL!] Device is not SDM845."
+  ui_print "- Checking device"
+  # Check for SDM845
+  [ "`getprop | grep -iE 'SDM845|sdm845'`" ] || abort "- [ABORT] Device is not SDM845!"
   ui_print "- SDM845 detected"
   
-  custom_variables()
-  device_check()  
+  # Check Android Version
+  if [ -f vendor/build.prop ]; then BUILDS="/system/build.prop vendor/build.prop"; else BUILDS="/system/build.prop"; fi
+  # DEVICECHECK=$(grep -E "ro.build.version.release=10" $BUILDS)
+  ANDROID10=$(grep -E "ro.build.version.release=10|ro.build.version.sdk=29" $BUILDS)
+  # Check & Extract Accondingly
+  if [ -n "$ANDROID10" ]; then
+    ui_print "- Extracting GPU Driver v415"
+	  unzip -o "$ZIPFILE" 'system_10/*' -d $MODPATH >&2
+    mv "$MODPATH/system_10" "$MODPATH/system"
+  else
+    ui_print "- Extracting GPU Driver v331"
+	  unzip -o "$ZIPFILE" 'system_09/*' -d $MODPATH >&2
+    mv "$MODPATH/system_09" "$MODPATH/system"
+  fi
 
-  # The following is the default implementation: extract $ZIPFILE/system to $MODPATH
-  # Extend/change the logic to whatever you want
-  ui_print "- Extracting module files"
-  unzip -o "$ZIPFILE" 'system/*' -d $MODPATH >&2
 }
 
 # Only some special files require specific permissions
@@ -161,16 +169,3 @@ set_permissions() {
 }
 
 # You can add more functions to assist your custom script code
-custom_variables() {
-if [ -f vendor/build.prop ]; then BUILDS="/system/build.prop vendor/build.prop"; else BUILDS="/system/build.prop"; fi
-  DEVICECHECK=$(grep -E "ro.build.version.release=10" $BUILDS)
-  VERSIONCHECK=$(grep -E "ro.build.version.release=10|ro.build.version.sdk=29" $BUILDS)
-}
-
-device_check() {
-  if [ -n "$VERSIONCHECK" ]; then
-    return 0
-  else
-    abort "[FAIL!] Not an Android 10 device!"
-  fi
-}
