@@ -124,7 +124,7 @@ REPLACE="
 print_modname() {
   ui_print "*******************************"
   ui_print "     Adreno 630 GPU Driver     "
-  ui_print "           v415.0              "
+  ui_print "          v415/v331            "
   ui_print "*******************************"
 }
 
@@ -141,12 +141,11 @@ on_install() {
   # DEVICECHECK=$(grep -E "ro.build.version.release=10" $BUILDS)
   ANDROID10=$(grep -E "ro.build.version.release=10|ro.build.version.sdk=29" $BUILDS)
   # Check & Extract Accondingly
+  ui_print "- Extracting GPU Driver"
   if [ -n "$ANDROID10" ]; then
-    ui_print "- Extracting GPU Driver v415"
 	  unzip -o "$ZIPFILE" 'system_10/*' -d $MODPATH >&2
     mv "$MODPATH/system_10" "$MODPATH/system"
   else
-    ui_print "- Extracting GPU Driver v331"
 	  unzip -o "$ZIPFILE" 'system_09/*' -d $MODPATH >&2
     mv "$MODPATH/system_09" "$MODPATH/system"
   fi
